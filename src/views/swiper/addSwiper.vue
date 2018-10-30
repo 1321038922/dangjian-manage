@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Title></Title>
         <el-card>
             <div slot="header">
                 添加轮播图
@@ -107,13 +108,14 @@ export default {
   created() {
     if(this.$route.name == 'editSwiper'){
         this.isSubmit = false
+        this.getData()
     }else{
         this.isSubmit = true
     }
     this.getNews()
-    if(!this.isSubmit){
-        this.getData()
-    }
+    // if(!this.isSubmit){
+    //     // this.getData()
+    // }
   },
   watch:{
       $route(to,from ){

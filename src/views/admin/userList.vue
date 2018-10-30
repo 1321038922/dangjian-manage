@@ -1,5 +1,6 @@
 <template>
     <div>
+      <Title></Title>
         <el-card>
             <div slot="header">
                 管理员列表
@@ -39,35 +40,54 @@ export default {
   data() {
     return {
       tableData: [],
-      total:0,
-      page:1
-    }
+      total: 0,
+      page: 1
+    };
   },
   methods: {
-    changePage(page){
-      this.page = page
-      this.getData()
+    changePage(page) {
+      this.page = page;
+      this.getData();
     },
     getData() {
-      this.$axios.get("/admin/adminUser",{pageSize:5,page:this.page}).then(res => {
-        if (res.code == 200) {
-          this.tableData = res.data;
-          this.total = res.total
-        } else if (res.code == 403) {
-          this.$router.push({ name: "login" });
-        }
-      });
+      this.$axios
+        .get("/admin/adminUser", { pageSize: 5, page: this.page })
+        .then(res => {
+          if (res.code == 200) {
+            this.tableData = res.data;
+            this.total = res.total;
+          } else if (res.code == 403) {
+            this.$router.push({ name: "login" });
+          }
+        });
     },
-    handleDelete(id){
-      this.$axios.delete(`/admin/adminUser/${id}`).then(res =>{
-        if(res.code == 200){
-          this.$message.success(res.msg)
-          this.getData()
-        }
+    handleDelete(id) {
+      this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
+        .then(() => {
+          this.$axios.delete(`/admin/adminUser/${id}`).then(res => {
+            if (res.code == 200) {
+              this.$message.success(res.msg);
+              this.getData();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
-    handleEdit(id){
-      this.$router.push({name:'editUser',query:{id:id}})
+    handleEdit(id) {
+      if (this.$store.state.userinfo.username == "Cason") {
+        this.$router.push({ name: "editUser", query: { id: id } });
+      } else {
+        this.$message.info("权限不足");
+      }
     }
   },
   created() {

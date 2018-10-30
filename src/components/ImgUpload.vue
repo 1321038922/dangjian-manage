@@ -42,7 +42,6 @@ export default {
         })
         .then(res => {
           this.imgurl = res.data.url;
-          console.log(res);
           this.$emit("success", res.data.url);
           this.$emit("input", res.data.url);
           this.$emit("change", res.data.url);

@@ -1,5 +1,6 @@
 <template>
    <div>
+     <Title></Title>
        <el-card  >
            <div slot="header">
                添加新闻
@@ -40,7 +41,8 @@
             </el-form-item>
          
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">新建</el-button>
+                <el-button v-if="isEdit" type="primary" @click="onSubmit">新建</el-button>
+                <el-button v-else type="primary" @click="handleSave">保存</el-button>
                 <el-button @click="cancel">取消</el-button>
             </el-form-item>
           </el-form>
@@ -67,8 +69,9 @@ export default {
         contentText: "",
         img: "",
         author: "",
-        type: "",
+        type: ""
       },
+      isEdit: true,
       category: [],
       token: "",
       users: [],
@@ -107,12 +110,20 @@ export default {
         }
       });
     },
+    handleSave(){
+        this.$axios.patch(`/admin/news/${this.$route.query.id}`,this.formData).then(res => {
+          if(res.code == 200) {
+            this.$message.success(res.msg)
+            this.$router.push({ name: "newslist" });
+          }
+        })
+    },
     eidtChange({ quill, html, text }) {
       this.formData.contentText = text;
     },
-    cancel(){
-          this.formData = {};
-      },
+    cancel() {
+      this.formData = {};
+    },
     getToken() {
       axios.get("http://mawenli.xyz:3000/getToken").then(res => {
         this.token = res.data.data;
@@ -124,20 +135,53 @@ export default {
       });
     },
     onSubmit() {
-      this.$axios.post('/admin/news', this.formData).then(res => {
-        if(res.code == 200) {
-          this.$message.success(res.msg)
-          this.$router.push({name:'newslist'})
-        }else {
-          this.$message.info(res.msg)
+      this.$axios.post("/admin/news", this.formData).then(res => {
+        if (res.code == 200) {
+          this.$message.success(res.msg);
+          this.$router.push({ name: "newslist" });
+        } else {
+          this.$message.info(res.msg);
         }
-      })
+      });
+    },
+    getnews() {
+      this.$axios.get(`/admin/news/${this.$route.query.id}`).then(res => {
+        if (res.code == 200) {
+          this.formData = res.data
+        } else {
+        }
+      });
     }
   },
   created() {
-    this.getUser();
-    this.getToken();
-    this.getcategory();
+    if (this.$route.name == "newsDetail") {
+      this.isEdit = false;
+      this.getUser();
+      this.getToken();
+      this.getcategory();
+      this.getnews()
+    } else {
+      this.isEdit = true
+      this.getUser();
+      this.getToken();
+      this.getcategory();
+    }
+  },
+  watch: {
+    $route(to, from) {
+      if (to.name == "newsDetail") {
+        this.isEdit = false;
+        this.getUser();
+        this.getToken();
+        this.getcategory();
+        this.getnews()
+      } else {
+        this.isEdit = true
+        this.getUser();
+        this.getToken();
+        this.getcategory();
+      }
+    }
   }
 };
 </script>

@@ -32,4 +32,7 @@ export default {
    width: 0;
    padding: 0;
  }
+ .w500{
+   width: 500px;
+ }
 </style>

@@ -34,6 +34,10 @@ export default {
             this.$router.push({ name: "login" });
           }
         });
+      }else if(click == 1){
+        this.$router.push({name:'editUserinfo'})
+      }else if(click == 2){
+        this.$router.push({name:'editpassword'})
       }
     }
   }

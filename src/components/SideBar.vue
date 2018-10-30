@@ -5,6 +5,7 @@
         class="el-menu-vertical-demo"
         background-color="#2d3a4b"
         text-color="#fff"
+        :unique-opened=true
         active-text-color="#ffd04b">
             <router-link to='/layout/home'>
             <el-menu-item index="1" class="title-nav"> 首页</el-menu-item>
@@ -30,6 +31,24 @@
                 </router-link>
                 <router-link to="/layout/addSwiper">
                     <el-menu-item index="3-2"> 添加轮播图</el-menu-item>
+                </router-link>
+            </el-submenu>
+            <el-submenu index="4">
+                <template slot="title"> <i class="el-icon-menu"></i> 评论管理 </template>
+                <router-link to="/layout/topicList">
+                    <el-menu-item index="4-1"> 评论列表</el-menu-item>
+                </router-link>
+                <router-link to="/layout/commonList">
+                    <el-menu-item index="4-2"> 回复列表</el-menu-item>
+                </router-link>
+            </el-submenu>
+            <el-submenu index="5">
+                <template slot="title"> <i class="el-icon-menu"></i> 分类管理 </template>
+                <router-link to="/layout/categoryList">
+                    <el-menu-item index="5-1">分类列表</el-menu-item>
+                </router-link>
+                <router-link to="/layout/addCategory">
+                    <el-menu-item index="5-2">添加分类</el-menu-item>
                 </router-link>
             </el-submenu>
         </el-menu>
